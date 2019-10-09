@@ -1,2 +1,3 @@
 # get_ticks_data_from_NEON
-Get ticks data from NEON
+1. Download the data from NEON.
+Unzip the files with unzip_multiple_zips.ipynb
