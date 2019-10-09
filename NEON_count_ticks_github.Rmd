@@ -1,0 +1,70 @@
+---
+title: "merge_NEON_tick"
+author: "Tao Huang"
+date: "October 8, 2019"
+output: html_document
+---
+
+#SELECT FILES WITH "FIELDDATA" IN THEIR NAMES
+```{r}
+files<-list.files("C:/Users/huangt/Downloads/NEON_count-ticks/output")
+files<-as.data.frame(files)
+
+fielddata<-files[grepl("fielddata",files$files),]
+dim(files)
+length(fielddata)
+fielddata<-files[grepl("fielddata",files$files),]
+#taxonomyProcessed
+```
+
+#MERGE DATA FRAMES
+```{r}
+setwd("C:/Users/huangt/Downloads/NEON_count-ticks/output")
+q<-as.character(fielddata[1])
+q<-read.csv(q)
+df<-as.data.frame(t( colnames(q)))
+
+colnames(df)<-colnames(q)
+df$decimalLongitude<-as.numeric(df$decimalLongitude
+)
+df$decimalLatitude<-as.numeric(df$decimalLatitude)
+df$elevation<-as.numeric(df$elevation)
+df$totalSampledArea<-as.numeric(df$totalSampledArea)
+
+for (q in fielddata)
+{
+  q<-read.csv(q)
+q$decimalLongitude<-as.numeric(q$decimalLongitude
+)
+q$decimalLatitude<-as.numeric(q$decimalLatitude)
+q$elevation<-as.numeric(q$elevation)
+q$totalSampledArea<-as.numeric(q$totalSampledArea)
+  df<-do.call("rbind", list(df,q))
+
+}
+  df$decimalLongitude<-as.numeric(df$decimalLongitude
+)
+df$decimalLatitude<-as.numeric(df$decimalLatitude)
+df$elevation<-as.numeric(df$elevation)
+df$totalSampledArea<-as.numeric(df$totalSampledArea)
+```
+
+#CLEAN THE DATA
+```{r}
+df_clean<-df[!df$uid=="uid",]
+df_clean<-df[!is.na(df_clean$adultCount) ,]
+dim(df)
+dim(df_clean)
+#nlcdClass
+#df_clean$decimalLatitude
+#df_clean$decimalLongitude 
+#elevation
+#df_clean$collectDate
+#larvaCount
+#nymphcount
+#adultcount
+#totalSampledArea
+plot(df_clean$decimalLongitude,df_clean$decimalLatitude)
+```
+
+
