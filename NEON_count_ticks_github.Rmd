@@ -76,11 +76,68 @@ head(df_df1)
 ```
 
 ```{r}
+save(df_df1,file="C:/Users/huangt/Documents/df_df1.Rdata")
+```
+
+```{r}
+
+load("C:/Users/huangt/Documents/df_df1.Rdata")
+head(df_df1)
+```
+
+
+```{r}
 derm<-df_df1[df_df1$genus=="Dermacentor",]
-derm<-derm[,c("collectDate.y","individualCount","totalSampledArea"      ,"targetTaxaPresent","adultCount","nymphCount"            ,"larvaCount", "decimalLatitude"              ,"decimalLongitude"             ,"elevation","nlcdClass")]
-write.csv(derm,file="C:/Users/huangt/Documents/neon_Dermacentor.csv")
-derm$density<-derm$individualCount/derm$totalSampledArea
-derm<-derm[!is.na(derm$density),] 
+derm<-derm[,c("siteID","sampleID","namedLocation.x","collectDate.y","individualCount","totalSampledArea"      ,"targetTaxaPresent","adultCount","nymphCount"            ,"larvaCount", "decimalLatitude"              ,"decimalLongitude"             ,"elevation","nlcdClass")]
+
+derm$density<-((derm$adultCount+derm$nymphCount+derm$larvaCount)/derm$totalSampledArea)
+derm<-derm[!is.na(derm$density),]
+
+derm$adultdensity<-((derm$adultCount)/derm$totalSampledArea)
+
+write.csv(derm,file="C:/Users/huangt/Documents/neon_Dermacentor_adult.csv")
+```
+
+```{r}
+derm$andensity<-((derm$adultCount+derm$nymphCount)/derm$totalSampledArea)
+derm<-derm[!is.na(derm$andensity),]
+write.csv(derm,file="C:/Users/huangt/Documents/neon_Dermacentor_an.csv")
+```
+
+
+```{r}
+derm_a<-aggregate(derm,by=list(derm$nlcdClass),FUN=mean)
+library(ggplot2)
+
+jpeg("C:/Users/huangt/Documents/nlcd_adult.jpg")
+
+b<-ggplot(derm,aes(x= derm$nlcdClass,y=derm$adultdensity,colours=derm$adultCount))+
+   geom_bar(stat="identity", position=position_dodge())
+
+b+ labs(x = "Land use",y="Adult tick count")+
+  theme(axis.text.x=element_text(angle=90
+                                 ,hjust=1,vjust=0.5
+                                 ))
+dev.off()
+
+jpeg("C:/Users/huangt/Documents/nlcd_adult.jpg")
+
+b<-ggplot(derm,aes(x= derm$nlcdClass,y=derm$andensity ,colours=derm$andensity))+
+   geom_bar(stat="identity", position=position_dodge())
+
+b+ labs(x = "Land use",y="Adult and nymph tick count")+
+  theme(axis.text.x=element_text(angle=90
+                                 ,hjust=1,vjust=0.5
+                                 ))
+dev.off()
+```
+
+
+```{r}
+derm_site<-derm[,c("siteID","density"      ,"decimalLatitude"              ,"decimalLongitude"             ,"elevation")]
+derm_site$siteID<-as.numeric(derm_site$siteID)
+derm_site2<-aggregate(derm_site,by=list(derm_site$siteID),FUN=median)
+write.csv(derm_site2,file="C:/Users/huangt/Documents/neon_Dermacentor_site4.csv")
 ```
 
 
