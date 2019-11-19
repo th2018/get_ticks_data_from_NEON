@@ -7,7 +7,7 @@ output: html_document
 
 #SELECT FILES WITH "FIELDDATA" IN THEIR NAMES; SELECT FILES WITH "taxonomyProcessed" IN THEIR NAMES
 ```{r}
-files<-list.files("C:/Users/huangt/Downloads/NEON_count-ticks/output")
+files<-list.files("/Users/owner/Downloads/get_ticks_data_from_NEON-master/output")
 files<-as.data.frame(files)
 
 fielddata<-files[grepl("fielddata",files$files),]
@@ -20,9 +20,9 @@ length(taxonomyProcessed)
 
 ```
 
-#MERGE DATA FRAMES of taxonomyProcessed
+#Merge data frames of taxonomyProcessed
 ```{r}
-setwd("C:/Users/huangt/Downloads/NEON_count-ticks/output")
+setwd("/Users/owner/Downloads/get_ticks_data_from_NEON-master/output")
 q1<-as.character(taxonomyProcessed[1])
 q1<-read.csv(q1)
 df1<-q1
@@ -42,14 +42,13 @@ for (q1 in taxonomyProcessed[2:length(taxonomyProcessed)])
 
 #MERGE DATA FRAMES OF fielddata
 ```{r}
-setwd("C:/Users/huangt/Downloads/NEON_count-ticks/output")
+setwd("/Users/owner/Downloads/get_ticks_data_from_NEON-master/output")
+#fielddata: FILES WITH "FIELDDATA" IN THEIR NAMES
 q<-as.character(fielddata[1])
+
 q<-read.csv(q)
 
-
 df<-q
-
-
 
 length(fielddata)
 
@@ -57,17 +56,16 @@ for (q in fielddata[2:1035])
 {
   q<-read.csv(q)
 
-  
   df<-do.call("rbind", list(df,q))
 
 }
-  df$decimalLongitude<-as.numeric(df$decimalLongitude
-)
+df$decimalLongitude<-as.numeric(df$decimalLongitude)
 df$decimalLatitude<-as.numeric(df$decimalLatitude)
 df$elevation<-as.numeric(df$elevation)
 df$totalSampledArea<-as.numeric(df$totalSampledArea)
 ```
 
+#MERGE taxonomyProcessed AND Fielddata
 ```{r}
 df_df1<-merge(df,df1,by= "sampleID")
 dim(df_df1)
@@ -85,7 +83,7 @@ load("C:/Users/huangt/Documents/df_df1.Rdata")
 head(df_df1)
 ```
 
-
+#subset Dermacentor
 ```{r}
 derm<-df_df1[df_df1$genus=="Dermacentor",]
 derm<-derm[,c("siteID","sampleID","namedLocation.x","collectDate.y","individualCount","totalSampledArea"      ,"targetTaxaPresent","adultCount","nymphCount"            ,"larvaCount", "decimalLatitude"              ,"decimalLongitude"             ,"elevation","nlcdClass")]
@@ -98,13 +96,14 @@ derm$adultdensity<-((derm$adultCount)/derm$totalSampledArea)
 write.csv(derm,file="C:/Users/huangt/Documents/neon_Dermacentor_adult.csv")
 ```
 
+#count dermencentor density
 ```{r}
 derm$andensity<-((derm$adultCount+derm$nymphCount)/derm$totalSampledArea)
 derm<-derm[!is.na(derm$andensity),]
 write.csv(derm,file="C:/Users/huangt/Documents/neon_Dermacentor_an.csv")
 ```
 
-
+#dermancentor density by LULC
 ```{r}
 derm_a<-aggregate(derm,by=list(derm$nlcdClass),FUN=mean)
 library(ggplot2)
@@ -154,11 +153,7 @@ require("plyr")
 
 ```{r}
 
-
-loc_shp <- SpatialPointsDataFrame(derm[,c("decimalLongitude","decimalLatitude"              )],
-                    derm
-                    )   
-
+loc_shp <- SpatialPointsDataFrame(derm[,c("decimalLongitude","decimalLatitude"              )],derm)   
 plot(loc_shp)
 ```
 
