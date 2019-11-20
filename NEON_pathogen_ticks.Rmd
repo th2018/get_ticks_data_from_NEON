@@ -1,0 +1,107 @@
+---
+
+
+author: "Tao Huang"
+output: html_document
+---
+
+#SELECT FILES WITH "pathogen" IN THEIR NAMEs
+```{r}
+files<-list.files("/Users/owner/Downloads/NEON_pathogens-tick/output")
+files<-as.data.frame(files)
+
+pathogen<-files[grepl("tck_pathogen.",files$files) &  grepl("expanded",files$files) ,]
+dim(files)
+length(pathogen)
+
+```
+
+#MERGE DATA FRAMES OF pathogen
+```{r}
+setwd("/Users/owner/Downloads/NEON_pathogens-tick/output")
+#pathogen: FILES WITH "pathogen" IN THEIR NAMES
+q<-as.character(pathogen[1])
+
+q<-read.csv(q)
+
+df<-q
+
+length(pathogen)
+
+for (q in pathogen[2:length(pathogen)])
+{
+ #print(q)
+   q<-read.csv(q)
+#print(dim(q))
+  df<-do.call("rbind", list(df,q))
+
+}
+
+#testResult     testPathogenName    individualCount     elevationUncertainty       collectDate       nlcdClass decimalLatitude decimalLongitude geodeticDatum coordinateUncertainty elevation
+
+```
+
+```{r}
+save(df,file="/Users/owner/Downloads/NEON_pathogens-tick/pathogen.Rdata")
+```
+
+#Positive ratio by namedLocation
+```{r}
+namedLocation<-c("NA")
+ratio<-c("NA")
+decimalLatitude <-c("NA")
+decimalLongitude<-c("NA")
+df3<-data.frame(namedLocation,ratio,decimalLatitude,decimalLongitude)
+df3$ratio<-as.numeric(df3$ratio)
+df3$decimalLatitude<-as.numeric(df3$decimalLatitude)
+df3$decimalLongitude<-as.numeric(df3$decimalLongitude)
+for (loc in unique(df$namedLocation))
+{
+  df2<-df[df$namedLocation==loc,]
+ #print(dim(df2))
+  df2$ratio<-dim(df2[df2$testResult=="Positive",])[1]/(dim(df2[df2$testResult=="Negative",])[1]+dim(df2[df2$testResult=="Positive",])[1])
+  df2<-df2[,c("namedLocation","ratio","decimalLatitude","decimalLongitude")]
+    df3<-do.call("rbind", list(df3,df2[1,]))
+}
+# 
+# df2<-df[,c("individualCount","nlcdClass")]
+# df_a<-aggregate(df2$individualCount,by=list(df2$nlcdClass),FUN=sum)
+# library(ggplot2)
+# 
+# #jpeg("C:/Users/huangt/Documents/nlcd_adult.jpg")
+# 
+# b<-ggplot(df2,aes(x= df2$nlcdClass ,y=df2$individualCount
+#                  #,colours=derm$adultCount
+#                  ))+
+#    geom_bar(stat="identity", position=position_dodge())
+# 
+# b+ labs(x = "nlcdClass",y="individualCount")+
+#   theme(axis.text.x=element_text(angle=90
+#                                  ,hjust=1,vjust=0.5
+#                                  ))
+
+```
+
+
+
+
+
+
+#load library
+```{r}
+library(raster)
+library(sp)
+library(rgdal)
+library("foreign")
+library("ggplot2")
+require("maptools")
+require("plyr")
+```
+
+```{r}
+
+loc_shp <- SpatialPointsDataFrame(df3[-1,c("decimalLongitude","decimalLatitude"              )],df3[-1,])   
+plot(loc_shp)
+```
+
+
