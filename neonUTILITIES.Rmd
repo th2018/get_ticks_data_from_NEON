@@ -7,9 +7,29 @@ output: html_document
 #install.packages("neonUtilities") 
 library(neonUtilities)
 ```
+
 #The identifier of the NEON data product: https://data.neonscience.org/data-products/explore
 ```{r}
 zipsByProduct(dpID="DP1.00094.001", site="SRER", startdate = "2019-01", enddate = NA,
+  package = "basic", avg = "all", check.size = TRUE, savepath = NA,
+  load = F)
+```
+
+#tick (Product ID:DP1.10093.001)
+```{r}
+zipsByProduct(dpID="DP1.10093.001"
+              , site="MOAB"          #"all"
+              , startdate = "2016-01"
+              , enddate = NA,
+  package = "basic", avg = "all", check.size = TRUE, savepath = NA,
+  load = F)
+```
+
+#precipitation (Product ID:DP1.00006.001)
+```{r}
+zipsByProduct(dpID="DP1.00006.001"
+              , site="SRER"
+              , startdate = "2019-01", enddate = NA,
   package = "basic", avg = "all", check.size = TRUE, savepath = NA,
   load = F)
 ```
