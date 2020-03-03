@@ -1,0 +1,20 @@
+---
+title: "neonUtilities"
+output: html_document
+---
+
+```{r}
+#install.packages("neonUtilities") 
+library(neonUtilities)
+```
+#The identifier of the NEON data product: https://data.neonscience.org/data-products/explore
+```{r}
+zipsByProduct(dpID="DP1.00094.001", site="SRER", startdate = "2019-01", enddate = NA,
+  package = "basic", avg = "all", check.size = TRUE, savepath = NA,
+  load = F)
+```
+
+#remote sensing product
+```{r}
+byFileAOP(dpID="DP3.30026.001", site="SJER", year="2017", check.size=F)
+```
