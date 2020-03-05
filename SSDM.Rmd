@@ -1,0 +1,31 @@
+---
+title: "SDM"
+output: html_document
+---
+
+```{r}
+#install.packages("SSDM")
+library("SSDM")
+```
+
+#Methods to assemble multiple algorithms in an ensemble SDM
+```{r}
+# Loading data
+data(Env)
+data(Occurrences)
+Occurrences <- subset(Occurrences, Occurrences$SPECIES == 'elliptica')
+# ensemble SDM building
+CTA <- modelling('CTA', Occurrences, Env, Xcol = 'LONGITUDE', Ycol = 'LATITUDE')
+SVM <- modelling('SVM', Occurrences, Env, Xcol = 'LONGITUDE', Ycol = 'LATITUDE')
+ESDM <- ensemble(CTA, SVM, ensemble.thresh = c(0.6))
+# Results plotting
+#plot(ESDM)
+```
+
+
+
+
+
+
+
+
