@@ -5,9 +5,10 @@ date: "October 8, 2019"
 output: html_document
 ---
 
+#tick count is in the file with "FIELDDATA" IN THEIR NAMES; tick species is in  FILES WITH "taxonomyProcessed" IN THEIR NAMES
 #SELECT FILES WITH "FIELDDATA" IN THEIR NAMES; SELECT FILES WITH "taxonomyProcessed" IN THEIR NAMES
 ```{r}
-files<-list.files("/Users/owner/Downloads/get_ticks_data_from_NEON-master/output")
+files<-list.files("C:/Users/gis/Downloads/get_ticks_data_from_NEON-master/filesToStack10093/output")
 files<-as.data.frame(files)
 
 fielddata<-files[grepl("fielddata",files$files),]
@@ -22,7 +23,7 @@ length(taxonomyProcessed)
 
 #Merge data frames of taxonomyProcessed
 ```{r}
-setwd("/Users/owner/Downloads/get_ticks_data_from_NEON-master/output")
+setwd("C:/Users/gis/Downloads/get_ticks_data_from_NEON-master/filesToStack10093/output")
 q1<-as.character(taxonomyProcessed[1])
 q1<-read.csv(q1)
 df1<-q1
@@ -42,7 +43,7 @@ for (q1 in taxonomyProcessed[2:length(taxonomyProcessed)])
 
 #MERGE DATA FRAMES OF fielddata
 ```{r}
-setwd("/Users/owner/Downloads/get_ticks_data_from_NEON-master/output")
+setwd("C:/Users/gis/Downloads/get_ticks_data_from_NEON-master/filesToStack10093/output")
 #fielddata: FILES WITH "FIELDDATA" IN THEIR NAMES
 q<-as.character(fielddata[1])
 
