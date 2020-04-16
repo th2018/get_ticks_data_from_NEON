@@ -1,0 +1,38 @@
+---
+title: "SDM"
+output: html_document
+---
+
+```{r}
+#install.packages("SSDM")
+library("SSDM")
+library("raster")
+```
+
+
+```{r}
+#https://www.fs.fed.us/rm/boise/AWAE/projects/NFS-regional-climate-change-maps/categories/us-raster-layers.html
+precipitation<-raster("C:/Users/gis/Downloads/Ppt_annual_historical/Ppt_annual_historical.tif")
+plot(precipitation)
+
+snow<-raster("C:/Users/gis/Downloads/A1SWE_historical/A1SWE_historical.tif")
+plot(snow)
+
+s<-stack(precipitation,snow)
+s
+
+load("C:/Users/gis/Downloads/get_ticks_data_from_NEON-master/filesToStack10093/taxonomyProcessed_Fielddata.Rdata")
+ticks<-df_df1
+
+model1<- modelling('GLM', ticks,s, Xcol = 'decimalLongitude', Ycol = 'decimalLatitude')
+
+plot(model1)
+
+```
+
+
+
+
+
+
+
